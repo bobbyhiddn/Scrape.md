@@ -44,8 +44,5 @@ To use the package, run the following command:
 scrape_md https://www.example.com
 ```
 
-This will create aa markdown file in the current directory with a filename based on the website you are scraping. For example, if you were scraping https://www.example.com, the file would be named example.md or something like that.
+This will create a markdown file in the current directory with a filename based on the website you are scraping. For example, if you were scraping https://www.example.com, the file would be named example.md or something like that.
 
-
-License
-Information about the code license.

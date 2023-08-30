@@ -12,7 +12,7 @@ def send_message(message_log):
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=message_log,
-        max_tokens=1000,
+        max_tokens=2000,
         stop=None,
         temperature=0.7,
     )
