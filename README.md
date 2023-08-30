@@ -23,7 +23,7 @@
 You have a few choices for installation but they both start with cloning the repo: 
 
 ```bash
-git clone 
+git clone https://github.com/bobbyhiddn/Scrape.md.git
 ```
 Then you can either install the package using pip:
 
