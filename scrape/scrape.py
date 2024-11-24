@@ -69,15 +69,19 @@ def to_markdown(title, body):
     return first_draft  # Return the first draft instead of saving it here
 
 # Function to improve the Markdown content based on the review
-def improve_markdown(first_draft, review_feedback):
+def improve_markdown(first_draft, review_feedback, title, body):
     message_log = [
         {"role": "system", "content": (
             "You are an AI assistant that improves Markdown documents based on review feedback. "
             "Please revise the following Markdown content according to the feedback provided."
+            "Only provide the markdown content; do not include any review feedback in the response."
+            "Be as comprehensive as possible in addressing the feedback as well as improving the overall quality of the content."
+            "Do not wrap the content in a markdown code block, just provide the content as markdown."
         )},
         {"role": "user", "content": (
             f"Markdown Content:\n{first_draft}\n\n"
             f"Review Feedback:\n{review_feedback}"
+            f"Original Content:\n{title}\n{body}"
         )}
     ]
     improved_content = send_message(message_log)
@@ -136,7 +140,7 @@ def main(url):
     
     # Stage 3: Improve the Markdown content based on the review
     print("Improving the Markdown content.")
-    improved_content = improve_markdown(first_draft, review_feedback)
+    improved_content = improve_markdown(first_draft, review_feedback, title, body)
     
     # Generate a filename using the AI
     print("Generating a suitable filename.")
@@ -176,10 +180,10 @@ def main(url):
     with open(full_path, "w", encoding='utf-8') as f:
         f.write(improved_content)
 
-    print(f"Content saved to {full_path}")
-    
     # Stage 4: Perform a final review and display it to the CLI
     final_review(body, improved_content)
+
+    print(f"Content saved to {full_path}")
 
 # Entry point
 if __name__ == "__main__":
