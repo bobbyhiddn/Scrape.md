@@ -1,36 +1,35 @@
-
 # Scrape.md
 
 ## Introduction
 
-  Scrape.md is a Python package that allows you to scrape text from any website and generate a comprehensive summary of the text using OpenAI's API. This is then converted into a markdown file that can be used for any purpose.
-
+Scrape.md is a Python package that allows you to scrape text from any website and generate a comprehensive transcription of the content using OpenAI's API. The script features a four-stage iterative process to ensure high-quality Markdown files that closely match the original content.
 
 ### Requirements
 
 - Python 3.6+
-- OpenAI API Key set as an environment variable(OPENAI_API_KEY)
+- OpenAI API Key set as an environment variable (`OPENAI_API_KEY`)
     - This can be done with the following command:
     
     ```bash
     export OPENAI_API_KEY="your-key-here"
     ```
-
-    - You can also add this to your .bashrc or .zshrc file to make it permanent.
+    - You can also add this to your `.bashrc` or `.zshrc` file to make it permanent.
 
 ## Installation
 
-You have a few choices for installation but they both start with cloning the repo: 
+First, clone the repository:
 
 ```bash
 git clone https://github.com/bobbyhiddn/Scrape.md.git
 ```
+
 Then you can either install the package using pip:
 
 ```bash
 pip install .
 ```
-Or you can install the package using the setup.py file:
+
+Or install the package using the `setup.py` file:
 
 ```bash
 python setup.py install
@@ -44,5 +43,46 @@ To use the package, run the following command:
 scrape_md https://www.example.com
 ```
 
-This will create a markdown file in the current directory with a filename based on the website you are scraping. For example, if you were scraping https://www.example.com, the file would be named example.md or something like that.
+This will create a Markdown file in the current directory with a filename based on the content of the website you are scraping.
+
+### Four-Stage Iterative Process
+
+The script now employs a four-stage process to enhance the quality of the transcribed content:
+
+1. **First Draft Generation**: Creates an initial Markdown version of the website's content.
+2. **Review Stage**: An AI assistant reviews the first draft for discrepancies and provides detailed feedback.
+3. **Improvement Stage**: The first draft is improved based on the AI's feedback to better match the original content.
+4. **Final Review**: A final AI review is performed to ensure the quality of the transcription. The review is displayed in the CLI for your reference.
+
+This process ensures that the generated Markdown file is clean, accurate, and closely reflects the original content with all important details preserved.
+
+### Example
+
+```bash
+scrape_md https://www.greenmatters.com/news/new-species-2024
+```
+
+Output:
+
+```
+Fetching content.
+Title: New Species 2024: The Animals and Plant Species Revealed This Year
+Generating the first draft.
+Reviewing the first draft.
+Improving the Markdown content.
+Generating a suitable filename.
+Content saved to new_species_discoveries_2024.md
+Final AI Review:
+[Detailed review output]
+```
+
+The generated file `new_species_discoveries_2024.md` will contain a high-quality transcription of the webpage content.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
 
