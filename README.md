@@ -15,6 +15,13 @@ Scrape.md is a Python package that allows you to scrape text from any website an
     ```
     - You can also add this to your `.bashrc` or `.zshrc` file to make it permanent.
 
+- *Optional*: Set the `SCRAPE_ARCHIVE_PATH` environment variable to specify a directory where the generated Markdown files will be saved. I figure those who are wanting to use this with Obsidian or another note-taking app might want to save all their transcriptions in a specific directory. That's what I'm doing, at least.
+    - Set it using the following command:
+
+    ```bash
+    export SCRAPE_ARCHIVE_PATH="/path/to/your/archive"
+    ```
+
 ## Installation
 
 First, clone the repository:
@@ -43,7 +50,9 @@ To use the package, run the following command:
 scrape_md https://www.example.com
 ```
 
-This will create a Markdown file in the current directory with a filename based on the content of the website you are scraping.
+By default, this will create a Markdown file in the current directory with a filename based on the content of the website you are scraping.
+
+If you have the `SCRAPE_ARCHIVE_PATH` environment variable set, when you run the script, you will be prompted to choose whether to save the file in your specified scrape archive path (`$SCRAPE_ARCHIVE_PATH`) or in the current working directory.
 
 ### Four-Stage Iterative Process
 

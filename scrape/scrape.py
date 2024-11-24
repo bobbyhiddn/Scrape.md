@@ -21,7 +21,7 @@ def send_message(message_log):
         response = client.chat.completions.create(
             model="chatgpt-4o-latest",
             messages=message_log,
-            max_tokens=2000,
+            max_tokens=12000,
             temperature=0.7,
         )
         return response.choices[0].message.content if response.choices else "No response received."
@@ -69,15 +69,19 @@ def to_markdown(title, body):
     return first_draft  # Return the first draft instead of saving it here
 
 # Function to improve the Markdown content based on the review
-def improve_markdown(first_draft, review_feedback):
+def improve_markdown(first_draft, review_feedback, title, body):
     message_log = [
         {"role": "system", "content": (
             "You are an AI assistant that improves Markdown documents based on review feedback. "
             "Please revise the following Markdown content according to the feedback provided."
+            "Only provide the markdown content; do not include any review feedback in the response."
+            "Be as comprehensive as possible in addressing the feedback as well as improving the overall quality of the content."
+            "Do not wrap the content in a markdown code block, just provide the content as markdown."
         )},
         {"role": "user", "content": (
             f"Markdown Content:\n{first_draft}\n\n"
             f"Review Feedback:\n{review_feedback}"
+            f"Original Content:\n{title}\n{body}"
         )}
     ]
     improved_content = send_message(message_log)
@@ -136,7 +140,7 @@ def main(url):
     
     # Stage 3: Improve the Markdown content based on the review
     print("Improving the Markdown content.")
-    improved_content = improve_markdown(first_draft, review_feedback)
+    improved_content = improve_markdown(first_draft, review_feedback, title, body)
     
     # Generate a filename using the AI
     print("Generating a suitable filename.")
@@ -153,14 +157,33 @@ def main(url):
     if not filename.endswith(".md"):
         filename += ".md"
     
-    # Save the improved content to a file
-    with open(filename, "w", encoding='utf-8') as f:
+    # Check for SCRAPE_ARCHIVE_PATH environment variable
+    archive_path = os.getenv('SCRAPE_ARCHIVE_PATH')
+
+    if archive_path:
+        print(f"The environment variable SCRAPE_ARCHIVE_PATH is set to: {archive_path}")
+        save_in_archive = click.prompt("Do you want to save the file in the scrape archive path? (Y/n)", default='Y')
+        if save_in_archive.lower() in ['y', 'yes', '']:
+            save_dir = archive_path
+        else:
+            save_dir = os.getcwd()
+    else:
+        print("You can set the SCRAPE_ARCHIVE_PATH environment variable if you want the document to be generated in a specific location.")
+        save_dir = os.getcwd()
+
+    # Ensure the directory exists
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir, exist_ok=True)
+
+    # Save the improved content to a file in the chosen directory
+    full_path = os.path.join(save_dir, filename)
+    with open(full_path, "w", encoding='utf-8') as f:
         f.write(improved_content)
-    
-    print(f"Content saved to {filename}")
-    
+
     # Stage 4: Perform a final review and display it to the CLI
     final_review(body, improved_content)
+
+    print(f"Content saved to {full_path}")
 
 # Entry point
 if __name__ == "__main__":
