@@ -21,7 +21,7 @@ def send_message(message_log):
         response = client.chat.completions.create(
             model="chatgpt-4o-latest",
             messages=message_log,
-            max_tokens=8000,
+            max_tokens=12000,
             temperature=0.7,
         )
         return response.choices[0].message.content if response.choices else "No response received."
