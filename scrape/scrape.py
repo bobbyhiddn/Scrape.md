@@ -21,7 +21,7 @@ def send_message(message_log):
         response = client.chat.completions.create(
             model="chatgpt-4o-latest",
             messages=message_log,
-            max_tokens=2000,
+            max_tokens=8000,
             temperature=0.7,
         )
         return response.choices[0].message.content if response.choices else "No response received."
@@ -153,11 +153,30 @@ def main(url):
     if not filename.endswith(".md"):
         filename += ".md"
     
-    # Save the improved content to a file
-    with open(filename, "w", encoding='utf-8') as f:
+    # Check for SCRAPE_ARCHIVE_PATH environment variable
+    archive_path = os.getenv('SCRAPE_ARCHIVE_PATH')
+
+    if archive_path:
+        print(f"The environment variable SCRAPE_ARCHIVE_PATH is set to: {archive_path}")
+        save_in_archive = click.prompt("Do you want to save the file in the scrape archive path? (Y/n)", default='Y')
+        if save_in_archive.lower() in ['y', 'yes', '']:
+            save_dir = archive_path
+        else:
+            save_dir = os.getcwd()
+    else:
+        print("You can set the SCRAPE_ARCHIVE_PATH environment variable if you want the document to be generated in a specific location.")
+        save_dir = os.getcwd()
+
+    # Ensure the directory exists
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir, exist_ok=True)
+
+    # Save the improved content to a file in the chosen directory
+    full_path = os.path.join(save_dir, filename)
+    with open(full_path, "w", encoding='utf-8') as f:
         f.write(improved_content)
-    
-    print(f"Content saved to {filename}")
+
+    print(f"Content saved to {full_path}")
     
     # Stage 4: Perform a final review and display it to the CLI
     final_review(body, improved_content)
